@@ -3,11 +3,26 @@ resource "aws_vpc" "main" {
 }
 
 resource "aws_subnet" " subnet_1"{
-  vpc_id             = aws_vpc.main.id
-  cidr_block        = "10.0.0.0/20
-  availability_zone ="ap-southeast-1"
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.0.0/20
+  availability_zone       = " ap-southeast-1"
   map_public_ip_on_launch = true
 
+resource "aws_internet_gateway" "eks-gateway"{
+  vpc_id = aws_vpc.main.id 
+}
+
+resource "aws_route_table" "main"{
+  vpc_id = aws_internet_gateway.main.id 
+}
+ route {
+  cidr_block = "10.0.0.0/16"
+  gateway_id = aws_internet_gateway.main.id 
+ }
+ route {
+  cidr_block = "10.0.0.0/16"
+  gateway_id = " local"
+ }
 
 }
 
@@ -17,7 +32,7 @@ module "eks" {
   version = "~> 19.0"
 
   cluster_name    = "iqbal-eks"
-  cluster_version = "1.33"
+  cluster_version = "1.29"
 
   cluster_endpoint_public_access = true
 
